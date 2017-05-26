@@ -1,0 +1,12 @@
+#
+# application.properties
+#
+# Editable properties file.
+#
+# This is an ordinary properties file that can have the format described
+# at https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html#load-java.io.Reader-
+#
+# This file can include application-specific properties and spring-specific
+# properties. Visit "Appendix A. Common application properties" at 
+# https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html.
+#
