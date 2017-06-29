@@ -16,9 +16,16 @@
 
 package com.vdenotaris.spring.boot.security.saml.web.core;
 
-import com.github.argherna.spring.security.saml.sample.web.SAMLUserDetailsServiceImpl;
-import com.vdenotaris.spring.boot.security.saml.web.CommonTestSupport;
-import com.vdenotaris.spring.boot.security.saml.web.TestConfig;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opensaml.saml2.core.NameID;
@@ -30,15 +37,11 @@ import org.springframework.security.saml.SAMLCredential;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.github.argherna.spring.security.saml.sample.web.SAMLUserDetailsServiceImpl;
+import com.vdenotaris.spring.boot.security.saml.web.CommonTestSupport;
+import com.vdenotaris.spring.boot.security.saml.web.TestConfig;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes= TestConfig.class)
 public class SAMLUserDetailsServiceImplTest extends CommonTestSupport {

@@ -16,12 +16,17 @@
 
 package com.vdenotaris.spring.boot.security.saml.web.core;
 
-import com.github.argherna.spring.security.saml.sample.web.CurrentUser;
-import com.github.argherna.spring.security.saml.sample.web.CurrentUserHandlerMethodArgumentResolver;
-import com.vdenotaris.spring.boot.security.saml.web.CommonTestSupport;
-import com.vdenotaris.spring.boot.security.saml.web.TestConfig;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.security.Principal;
+import java.util.Collections;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +40,12 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.security.Principal;
-import java.util.Collections;
+import com.github.argherna.spring.security.saml.sample.web.CurrentUser;
+import com.github.argherna.spring.security.saml.sample.web.CurrentUserHandlerMethodArgumentResolver;
+import com.vdenotaris.spring.boot.security.saml.web.CommonTestSupport;
+import com.vdenotaris.spring.boot.security.saml.web.TestConfig;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes= TestConfig.class)
 public class CurrentUserHandlerMethodArgumentResolverTest extends CommonTestSupport {
