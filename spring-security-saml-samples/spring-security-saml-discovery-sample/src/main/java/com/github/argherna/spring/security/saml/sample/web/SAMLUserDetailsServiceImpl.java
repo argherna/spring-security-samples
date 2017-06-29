@@ -52,7 +52,7 @@ public class SAMLUserDetailsServiceImpl implements SAMLUserDetailsService {
   private final String rolePrefix;
 
   @Autowired
-  public SAMLUserDetailsServiceImpl(@Value("${sampleapp.role-prefix}") String rolePrefix) {
+  public SAMLUserDetailsServiceImpl(@Value("${sampleapp-saml.role-prefix}") String rolePrefix) {
     this.rolePrefix = rolePrefix;
   }
 
