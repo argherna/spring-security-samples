@@ -30,6 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.protocol.Protocol;
@@ -72,6 +75,7 @@ import org.springframework.security.saml.metadata.ExtendedMetadataDelegate;
 import org.springframework.security.saml.metadata.MetadataDisplayFilter;
 import org.springframework.security.saml.metadata.MetadataGenerator;
 import org.springframework.security.saml.metadata.MetadataGeneratorFilter;
+import org.springframework.security.saml.metadata.MetadataManager;
 import org.springframework.security.saml.parser.ParserPoolHolder;
 import org.springframework.security.saml.processor.HTTPArtifactBinding;
 import org.springframework.security.saml.processor.HTTPPAOS11Binding;
@@ -118,6 +122,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private SampleAppSAML sampleApp;
 
+  private Timer backgroundTimer;
+
+  private MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager;
+
+  @PostConstruct
+  public void initialize() {
+    backgroundTimer = new Timer(true);
+    multiThreadedHttpConnectionManager = new MultiThreadedHttpConnectionManager();
+  }
+
+  @PreDestroy
+  public void destroy() {
+    backgroundTimer.purge();
+    backgroundTimer.cancel();
+    multiThreadedHttpConnectionManager.shutdown();
+  }
+
   // Initialization of the velocity engine
   @Bean
   public VelocityEngine velocityEngine() {
@@ -137,13 +158,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   // Bindings, encoders and decoders used for creating and parsing messages
   @Bean
-  public MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager() {
-    return new MultiThreadedHttpConnectionManager();
-  }
-
-  @Bean
   public HttpClient httpClient() {
-    return new HttpClient(multiThreadedHttpConnectionManager());
+    return new HttpClient(multiThreadedHttpConnectionManager);
   }
 
   // SAML Authentication Provider responsible for validating of received SAML
@@ -289,13 +305,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  @Qualifier("idp-ssocircle")
-  public ExtendedMetadataDelegate ssoCircleExtendedMetadataProvider()
-      throws MetadataProviderException {
+  public ExtendedMetadataDelegate extendedMetadataProvider() throws MetadataProviderException {
     String idpMetadataURL = sampleApp.getIdpMetadataUrl();
-    Timer backgroundTaskTimer = new Timer(true);
     HTTPMetadataProvider httpMetadataProvider =
-        new HTTPMetadataProvider(backgroundTaskTimer, httpClient(), idpMetadataURL);
+        new HTTPMetadataProvider(backgroundTimer, httpClient(), idpMetadataURL);
     httpMetadataProvider.setParserPool(parserPool());
     ExtendedMetadataDelegate extendedMetadataDelegate =
         new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
@@ -310,10 +323,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   // Do no forget to call iniitalize method on providers
   @Bean
   @Qualifier("metadata")
-  public CachingMetadataManager metadata() throws MetadataProviderException {
+  public MetadataManager metadata() throws MetadataProviderException {
     List<MetadataProvider> providers = new ArrayList<>();
-    providers.add(ssoCircleExtendedMetadataProvider());
-    return new CachingMetadataManager(providers);
+    providers.add(extendedMetadataProvider());
+    MetadataManager metadataManager = new CachingMetadataManager(providers);
+    if (sampleApp.getDefaultIDP() != null && !sampleApp.getDefaultIDP().isEmpty()) {
+      metadataManager.setDefaultIDP(sampleApp.getDefaultIDP());
+    }
+    return metadataManager;
   }
 
   // Filter automatically generates default SP metadata

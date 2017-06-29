@@ -25,6 +25,8 @@ public class SampleAppSAML {
 
   private String idpDiscoveryResponseUrl;
 
+  private String defaultIDP;
+
   public String getKeyStoreFile() {
     return keyStoreFile;
   }
@@ -97,28 +99,65 @@ public class SampleAppSAML {
     this.idpDiscoveryResponseUrl = idpDiscoveryResponseUrl;
   }
 
+  public String getDefaultIDP() {
+    return defaultIDP;
+  }
+
+  public void setDefaultIDP(String defaultIDP) {
+    this.defaultIDP = defaultIDP;
+  }
+
   @Override
   public String toString() {
-    return "SampleApp [keyStoreFile=" + keyStoreFile
-        + ", keyStorePassword=********, keyStoreDefaultKey=" + keyStoreDefaultKey + ", defaultPort="
-        + defaultPort + ", idpMetadataUrl=" + idpMetadataUrl + ", entityID=" + entityID
-        + ", idpDiscoveryUrl=" + idpDiscoveryUrl + ", idpDiscoveryResponseUrl="
-        + idpDiscoveryResponseUrl + "]";
+    StringBuilder builder = new StringBuilder();
+    builder.append("SampleAppSAML [");
+    if (keyStoreFile != null) {
+      builder.append("keyStoreFile=").append(keyStoreFile).append(", ");
+    }
+    if (keyStorePassword != null) {
+      builder.append("keyStorePassword=********, ");
+    }
+    if (keyStoreDefaultKey != null) {
+      builder.append("keyStoreDefaultKey=").append(keyStoreDefaultKey).append(", ");
+    }
+    if (keyPassword != null) {
+      builder.append("keyPassword=********, ");
+    }
+    builder.append("defaultPort=").append(defaultPort).append(", ");
+    if (idpMetadataUrl != null) {
+      builder.append("idpMetadataUrl=").append(idpMetadataUrl).append(", ");
+    }
+    if (entityID != null) {
+      builder.append("entityID=").append(entityID).append(", ");
+    }
+    if (idpDiscoveryUrl != null) {
+      builder.append("idpDiscoveryUrl=").append(idpDiscoveryUrl).append(", ");
+    }
+    if (idpDiscoveryResponseUrl != null) {
+      builder.append("idpDiscoveryResponseUrl=").append(idpDiscoveryResponseUrl).append(", ");
+    }
+    if (defaultIDP != null) {
+      builder.append("defaultIDP=").append(defaultIDP);
+    }
+    builder.append("]");
+    return builder.toString();
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
+    result = prime * result + ((defaultIDP == null) ? 0 : defaultIDP.hashCode());
     result = prime * result + defaultPort;
     result = prime * result + ((entityID == null) ? 0 : entityID.hashCode());
+    result = prime * result
+        + ((idpDiscoveryResponseUrl == null) ? 0 : idpDiscoveryResponseUrl.hashCode());
+    result = prime * result + ((idpDiscoveryUrl == null) ? 0 : idpDiscoveryUrl.hashCode());
     result = prime * result + ((idpMetadataUrl == null) ? 0 : idpMetadataUrl.hashCode());
+    result = prime * result + ((keyPassword == null) ? 0 : keyPassword.hashCode());
     result = prime * result + ((keyStoreDefaultKey == null) ? 0 : keyStoreDefaultKey.hashCode());
     result = prime * result + ((keyStoreFile == null) ? 0 : keyStoreFile.hashCode());
     result = prime * result + ((keyStorePassword == null) ? 0 : keyStorePassword.hashCode());
-    result = prime * result + ((idpDiscoveryUrl == null) ? 0 : idpDiscoveryUrl.hashCode());
-    result = prime * result
-        + ((idpDiscoveryResponseUrl == null) ? 0 : idpDiscoveryResponseUrl.hashCode());
     return result;
   }
 
@@ -134,6 +173,13 @@ public class SampleAppSAML {
       return false;
     }
     SampleAppSAML other = (SampleAppSAML) obj;
+    if (defaultIDP == null) {
+      if (other.defaultIDP != null) {
+        return false;
+      }
+    } else if (!defaultIDP.equals(other.defaultIDP)) {
+      return false;
+    }
     if (defaultPort != other.defaultPort) {
       return false;
     }
@@ -144,11 +190,32 @@ public class SampleAppSAML {
     } else if (!entityID.equals(other.entityID)) {
       return false;
     }
+    if (idpDiscoveryResponseUrl == null) {
+      if (other.idpDiscoveryResponseUrl != null) {
+        return false;
+      }
+    } else if (!idpDiscoveryResponseUrl.equals(other.idpDiscoveryResponseUrl)) {
+      return false;
+    }
+    if (idpDiscoveryUrl == null) {
+      if (other.idpDiscoveryUrl != null) {
+        return false;
+      }
+    } else if (!idpDiscoveryUrl.equals(other.idpDiscoveryUrl)) {
+      return false;
+    }
     if (idpMetadataUrl == null) {
       if (other.idpMetadataUrl != null) {
         return false;
       }
     } else if (!idpMetadataUrl.equals(other.idpMetadataUrl)) {
+      return false;
+    }
+    if (keyPassword == null) {
+      if (other.keyPassword != null) {
+        return false;
+      }
+    } else if (!keyPassword.equals(other.keyPassword)) {
       return false;
     }
     if (keyStoreDefaultKey == null) {
@@ -170,20 +237,6 @@ public class SampleAppSAML {
         return false;
       }
     } else if (!keyStorePassword.equals(other.keyStorePassword)) {
-      return false;
-    }
-    if (idpDiscoveryUrl == null) {
-      if (other.idpDiscoveryUrl != null) {
-        return false;
-      }
-    } else if (!idpDiscoveryUrl.equals(other.idpDiscoveryUrl)) {
-      return false;
-    }
-    if (idpDiscoveryResponseUrl == null) {
-      if (other.idpDiscoveryResponseUrl != null) {
-        return false;
-      }
-    } else if (!idpDiscoveryResponseUrl.equals(other.idpDiscoveryResponseUrl)) {
       return false;
     }
     return true;
