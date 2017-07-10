@@ -27,6 +27,8 @@ public class SampleAppSAML {
 
   private String defaultIDP;
 
+  private long metadataReloadDelayMs;
+
   public String getKeyStoreFile() {
     return keyStoreFile;
   }
@@ -107,6 +109,14 @@ public class SampleAppSAML {
     this.defaultIDP = defaultIDP;
   }
 
+  public long getMetadataReloadDelayMs() {
+    return metadataReloadDelayMs;
+  }
+
+  public void setMetadataReloadDelayMs(long metadataReloadDelayMs) {
+    this.metadataReloadDelayMs = metadataReloadDelayMs;
+  }
+
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
@@ -115,13 +125,13 @@ public class SampleAppSAML {
       builder.append("keyStoreFile=").append(keyStoreFile).append(", ");
     }
     if (keyStorePassword != null) {
-      builder.append("keyStorePassword=********, ");
+      builder.append("keyStorePassword=").append(keyStorePassword).append(", ");
     }
     if (keyStoreDefaultKey != null) {
       builder.append("keyStoreDefaultKey=").append(keyStoreDefaultKey).append(", ");
     }
     if (keyPassword != null) {
-      builder.append("keyPassword=********, ");
+      builder.append("keyPassword=").append(keyPassword).append(", ");
     }
     builder.append("defaultPort=").append(defaultPort).append(", ");
     if (idpMetadataUrl != null) {
@@ -137,9 +147,9 @@ public class SampleAppSAML {
       builder.append("idpDiscoveryResponseUrl=").append(idpDiscoveryResponseUrl).append(", ");
     }
     if (defaultIDP != null) {
-      builder.append("defaultIDP=").append(defaultIDP);
+      builder.append("defaultIDP=").append(defaultIDP).append(", ");
     }
-    builder.append("]");
+    builder.append("metadataReloadDelayMs=").append(metadataReloadDelayMs).append("]");
     return builder.toString();
   }
 
@@ -158,6 +168,7 @@ public class SampleAppSAML {
     result = prime * result + ((keyStoreDefaultKey == null) ? 0 : keyStoreDefaultKey.hashCode());
     result = prime * result + ((keyStoreFile == null) ? 0 : keyStoreFile.hashCode());
     result = prime * result + ((keyStorePassword == null) ? 0 : keyStorePassword.hashCode());
+    result = prime * result + (int) (metadataReloadDelayMs ^ (metadataReloadDelayMs >>> 32));
     return result;
   }
 
@@ -239,7 +250,9 @@ public class SampleAppSAML {
     } else if (!keyStorePassword.equals(other.keyStorePassword)) {
       return false;
     }
+    if (metadataReloadDelayMs != other.metadataReloadDelayMs) {
+      return false;
+    }
     return true;
   }
-
 }

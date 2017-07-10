@@ -43,10 +43,11 @@ import org.opensaml.saml2.metadata.provider.MetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.xml.parse.ParserPool;
 import org.opensaml.xml.parse.StaticBasicParserPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -111,10 +112,11 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
-@EnableConfigurationProperties(SampleAppSAML.class)
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+  private static final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
 
   @Autowired
   private SAMLUserDetailsServiceImpl samlUserDetailsServiceImpl;
@@ -128,6 +130,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @PostConstruct
   public void initialize() {
+    logger.debug("CONFIG: {}", sampleApp);
+
     backgroundTimer = new Timer(true);
     multiThreadedHttpConnectionManager = new MultiThreadedHttpConnectionManager();
   }
@@ -283,15 +287,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public ExtendedMetadata extendedMetadata() {
     ExtendedMetadata extendedMetadata = new ExtendedMetadata();
-    extendedMetadata.setIdpDiscoveryEnabled(true);
     extendedMetadata.setSignMetadata(false);
     if (sampleApp.getIdpDiscoveryUrl() != null && !sampleApp.getIdpDiscoveryUrl().isEmpty()) {
+      extendedMetadata.setIdpDiscoveryEnabled(true);
       extendedMetadata.setIdpDiscoveryURL(sampleApp.getIdpDiscoveryUrl());
     }
     if (sampleApp.getIdpDiscoveryResponseUrl() != null
         && !sampleApp.getIdpDiscoveryResponseUrl().isEmpty()) {
       extendedMetadata.setIdpDiscoveryResponseURL(sampleApp.getIdpDiscoveryResponseUrl());
-
     }
     return extendedMetadata;
   }
@@ -310,6 +313,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     HTTPMetadataProvider httpMetadataProvider =
         new HTTPMetadataProvider(backgroundTimer, httpClient(), idpMetadataURL);
     httpMetadataProvider.setParserPool(parserPool());
+    if (sampleApp.getMetadataReloadDelayMs() != 0l) {
+      httpMetadataProvider.setMaxRefreshDelay(sampleApp.getMetadataReloadDelayMs());
+    }
     ExtendedMetadataDelegate extendedMetadataDelegate =
         new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
     extendedMetadataDelegate.setMetadataTrustCheck(true);
