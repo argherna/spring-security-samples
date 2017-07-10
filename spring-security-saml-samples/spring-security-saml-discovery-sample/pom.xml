@@ -4,11 +4,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.argherna</groupId>
-  <artifactId>spring-security-saml-discovery-sample</artifactId>
+  <artifactId>spring-security-saml-sample</artifactId>
   <packaging>jar</packaging>
 
 	<!-- Project description -->
-  <name>Spring Boot and Spring Security SAML integration with discovery sample</name>
+  <name>Spring Boot and Spring Security SAML integration sample</name>
   <description>Currently Spring Security SAML module doesn't provide a starter for Spring Boot. Moreover, its configuration is XML-based as of this writing. The aim of this project is to explain how to develop a Service Provider (SP) which uses Spring Boot and Spring Security SAML Extension, by defining an annotation-based configuration (Java Configuration). Thymeleaf is also used as template engine.</description>
   <url>https://github.com/argherna/spring-security-samples</url>
 
