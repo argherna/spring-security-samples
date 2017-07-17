@@ -32,20 +32,19 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-public class MvcConfig extends WebMvcConfigurerAdapter {
+public class WebviewMvcConfig extends WebMvcConfigurerAdapter {
 
   @Autowired
-  CurrentUserHandlerMethodArgumentResolver currentUserHandlerMethodArgumentResolver;
+  private CurrentUserHandlerMethodArgumentResolver currentUserHandlerMethodArgumentResolver;
+  
+  @Override
+  public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+    argumentResolvers.add(currentUserHandlerMethodArgumentResolver);
+  }
 
   @Override
   public void addViewControllers(ViewControllerRegistry registry) {
     registry.addViewController("/").setViewName("index");
     registry.addViewController("/error").setViewName("error");
   }
-
-  @Override
-  public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-    argumentResolvers.add(currentUserHandlerMethodArgumentResolver);
-  }
-
 }

@@ -19,13 +19,13 @@ import org.springframework.security.kerberos.web.authentication.SpnegoEntryPoint
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
-public class WebapiSecurityConfig extends WebSecurityConfigurerAdapter {
+public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private final SampleAppApi sampleApp;
+  private final SampleAppKerberosApi sampleAppKerberosApi;
 
   @Autowired
-  public WebapiSecurityConfig(SampleAppApi sampleApp) {
-    this.sampleApp = sampleApp;
+  public ApiSecurityConfig(SampleAppKerberosApi sampleAppKerberbosApi) {
+    this.sampleAppKerberosApi = sampleAppKerberbosApi;
   }
 
   @Bean
@@ -56,17 +56,19 @@ public class WebapiSecurityConfig extends WebSecurityConfigurerAdapter {
         .authenticationProvider(kerberosServiceAuthenticationProvider());
   }
 
-  private KerberosServiceAuthenticationProvider kerberosServiceAuthenticationProvider() {
+  @Bean
+  public KerberosServiceAuthenticationProvider kerberosServiceAuthenticationProvider() {
     KerberosServiceAuthenticationProvider provider = new KerberosServiceAuthenticationProvider();
     provider.setTicketValidator(sunJaasKerberosTicketValidator());
     provider.setUserDetailsService(kerberosUserDetailsService());
     return provider;
   }
 
-  private SunJaasKerberosTicketValidator sunJaasKerberosTicketValidator() {
+  @Bean
+  public SunJaasKerberosTicketValidator sunJaasKerberosTicketValidator() {
     SunJaasKerberosTicketValidator ticketValidator = new SunJaasKerberosTicketValidator();
-    ticketValidator.setServicePrincipal(sampleApp.getServicePrincipal());
-    ticketValidator.setKeyTabLocation(new FileSystemResource(sampleApp.getKeytabLocation()));
+    ticketValidator.setServicePrincipal(sampleAppKerberosApi.getServicePrincipal());
+    ticketValidator.setKeyTabLocation(new FileSystemResource(sampleAppKerberosApi.getKeytabLocation()));
     ticketValidator.setDebug(true);
     return ticketValidator;
   }
@@ -81,6 +83,6 @@ public class WebapiSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   private UserDetailsService kerberosUserDetailsService() {
-    return new KerberosUserDetailsService();
+    return new KerberosUserDetailsServiceImpl();
   }
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(value = "/secureinfo")
-public class SecurePage {
+public class SecureInfoController {
 
   @GetMapping
   public String getView(@CurrentUser UserDetails user, Model model) {

@@ -19,7 +19,7 @@ import org.springframework.web.client.ResponseErrorHandler;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@EnableConfigurationProperties(SampleApp.class)
+@EnableConfigurationProperties(SampleAppKerberosClient.class)
 @SpringBootApplication
 public class SpringSecurityKerberosClientSampleApplication
     implements ApplicationRunner, ResponseErrorHandler {
@@ -27,19 +27,19 @@ public class SpringSecurityKerberosClientSampleApplication
   private static final Logger logger =
       LoggerFactory.getLogger(SpringSecurityKerberosClientSampleApplication.class);
 
-  private final SampleApp sampleApp;
+  private final SampleAppKerberosClient sampleAppKerberosClient;
 
   @Autowired
-  public SpringSecurityKerberosClientSampleApplication(SampleApp sampleApp) {
-    this.sampleApp = sampleApp;
+  public SpringSecurityKerberosClientSampleApplication(SampleAppKerberosClient sampleAppKerberosClient) {
+    this.sampleAppKerberosClient = sampleAppKerberosClient;
   }
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
-    KerberosRestTemplate restTemplate = new KerberosRestTemplate(sampleApp.getKeytabLocation(),
-        sampleApp.getUserPrincipal(), Collections.singletonMap("debug", "true"));
+    KerberosRestTemplate restTemplate = new KerberosRestTemplate(sampleAppKerberosClient.getKeytabLocation(),
+        sampleAppKerberosClient.getUserPrincipal(), Collections.singletonMap("debug", "true"));
     restTemplate.setErrorHandler(this);
-    ResourceContent resourceContent = restTemplate.getForObject(sampleApp.getUrl(), ResourceContent.class);
+    ResourceContent resourceContent = restTemplate.getForObject(sampleAppKerberosClient.getUrl(), ResourceContent.class);
     if (resourceContent != null) {
       logger.info("resourceContent = {}", resourceContent);
     }
@@ -82,8 +82,45 @@ public class SpringSecurityKerberosClientSampleApplication
     }
 
     @Override
-    public String toString() {
-      return getClass().getSimpleName() + " [content=" + content + "]";
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((content == null) ? 0 : content.hashCode());
+      return result;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) {
+        return true;
+      }
+      if (obj == null) {
+        return false;
+      }
+      if (!(obj instanceof ResourceContent)) {
+        return false;
+      }
+      ResourceContent other = (ResourceContent) obj;
+      if (content == null) {
+        if (other.content != null) {
+          return false;
+        }
+      } else if (!content.equals(other.content)) {
+        return false;
+      }
+      return true;
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("ResourceContent [");
+      if (content != null) {
+        builder.append("content=").append(content);
+      }
+      builder.append("]");
+      return builder.toString();
+    }
+
   }
 }

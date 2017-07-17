@@ -114,15 +114,15 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebviewSecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private static final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
+  private static final Logger logger = LoggerFactory.getLogger(WebviewSecurityConfig.class);
 
   @Autowired
   private SAMLUserDetailsServiceImpl samlUserDetailsServiceImpl;
 
   @Autowired
-  private SampleAppSAML sampleApp;
+  private SampleAppSAMLWebview sampleAppSAMLWebview;
 
   private Timer backgroundTimer;
 
@@ -130,7 +130,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @PostConstruct
   public void initialize() {
-    logger.debug("CONFIG: {}", sampleApp);
+    logger.debug("CONFIG: {}", sampleAppSAMLWebview);
 
     backgroundTimer = new Timer(true);
     multiThreadedHttpConnectionManager = new MultiThreadedHttpConnectionManager();
@@ -233,11 +233,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public KeyManager keyManager() {
     DefaultResourceLoader loader = new DefaultResourceLoader();
-    Resource storeFile = loader.getResource(sampleApp.getKeyStoreFile());
-    String storePass = sampleApp.getKeyStorePassword();
+    Resource storeFile = loader.getResource(sampleAppSAMLWebview.getKeyStoreFile());
+    String storePass = sampleAppSAMLWebview.getKeyStorePassword();
     Map<String, String> passwords = new HashMap<>();
-    passwords.put(sampleApp.getKeyStoreDefaultKey(), sampleApp.getKeyPassword());
-    String defaultKey = sampleApp.getKeyStoreDefaultKey();
+    passwords.put(sampleAppSAMLWebview.getKeyStoreDefaultKey(), sampleAppSAMLWebview.getKeyPassword());
+    String defaultKey = sampleAppSAMLWebview.getKeyStoreDefaultKey();
     return new JKSKeyManager(storeFile, storePass, passwords, defaultKey);
   }
 
@@ -288,13 +288,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   public ExtendedMetadata extendedMetadata() {
     ExtendedMetadata extendedMetadata = new ExtendedMetadata();
     extendedMetadata.setSignMetadata(false);
-    if (sampleApp.getIdpDiscoveryUrl() != null && !sampleApp.getIdpDiscoveryUrl().isEmpty()) {
+    if (sampleAppSAMLWebview.getIdpDiscoveryUrl() != null && !sampleAppSAMLWebview.getIdpDiscoveryUrl().isEmpty()) {
       extendedMetadata.setIdpDiscoveryEnabled(true);
-      extendedMetadata.setIdpDiscoveryURL(sampleApp.getIdpDiscoveryUrl());
+      extendedMetadata.setIdpDiscoveryURL(sampleAppSAMLWebview.getIdpDiscoveryUrl());
     }
-    if (sampleApp.getIdpDiscoveryResponseUrl() != null
-        && !sampleApp.getIdpDiscoveryResponseUrl().isEmpty()) {
-      extendedMetadata.setIdpDiscoveryResponseURL(sampleApp.getIdpDiscoveryResponseUrl());
+    if (sampleAppSAMLWebview.getIdpDiscoveryResponseUrl() != null
+        && !sampleAppSAMLWebview.getIdpDiscoveryResponseUrl().isEmpty()) {
+      extendedMetadata.setIdpDiscoveryResponseURL(sampleAppSAMLWebview.getIdpDiscoveryResponseUrl());
     }
     return extendedMetadata;
   }
@@ -309,12 +309,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public ExtendedMetadataDelegate extendedMetadataProvider() throws MetadataProviderException {
-    String idpMetadataURL = sampleApp.getIdpMetadataUrl();
+    String idpMetadataURL = sampleAppSAMLWebview.getIdpMetadataUrl();
     HTTPMetadataProvider httpMetadataProvider =
         new HTTPMetadataProvider(backgroundTimer, httpClient(), idpMetadataURL);
     httpMetadataProvider.setParserPool(parserPool());
-    if (sampleApp.getMetadataReloadDelayMs() != 0l) {
-      httpMetadataProvider.setMaxRefreshDelay(sampleApp.getMetadataReloadDelayMs());
+    if (sampleAppSAMLWebview.getMetadataReloadDelayMs() != 0l) {
+      httpMetadataProvider.setMaxRefreshDelay(sampleAppSAMLWebview.getMetadataReloadDelayMs());
     }
     ExtendedMetadataDelegate extendedMetadataDelegate =
         new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
@@ -333,8 +333,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     List<MetadataProvider> providers = new ArrayList<>();
     providers.add(extendedMetadataProvider());
     MetadataManager metadataManager = new CachingMetadataManager(providers);
-    if (sampleApp.getDefaultIDP() != null && !sampleApp.getDefaultIDP().isEmpty()) {
-      metadataManager.setDefaultIDP(sampleApp.getDefaultIDP());
+    if (sampleAppSAMLWebview.getDefaultIDP() != null && !sampleAppSAMLWebview.getDefaultIDP().isEmpty()) {
+      metadataManager.setDefaultIDP(sampleAppSAMLWebview.getDefaultIDP());
     }
     return metadataManager;
   }
@@ -343,7 +343,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public MetadataGenerator metadataGenerator() {
     MetadataGenerator metadataGenerator = new MetadataGenerator();
-    metadataGenerator.setEntityId(sampleApp.getEntityID());
+    metadataGenerator.setEntityId(sampleAppSAMLWebview.getEntityID());
     metadataGenerator.setExtendedMetadata(extendedMetadata());
     metadataGenerator.setIncludeDiscoveryExtension(false);
     metadataGenerator.setKeyManager(keyManager());

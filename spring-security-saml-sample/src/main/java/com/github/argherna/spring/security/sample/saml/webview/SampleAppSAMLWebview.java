@@ -4,8 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "sampleapp-saml")
-public class SampleAppSAML {
+@ConfigurationProperties(prefix = "sampleapp-saml-webview")
+public class SampleAppSAMLWebview {
 
   private String keyStoreFile;
 
@@ -120,7 +120,7 @@ public class SampleAppSAML {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("SampleAppSAML [");
+    builder.append("SampleAppSAMLWebview [");
     if (keyStoreFile != null) {
       builder.append("keyStoreFile=").append(keyStoreFile).append(", ");
     }
@@ -183,7 +183,7 @@ public class SampleAppSAML {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    SampleAppSAML other = (SampleAppSAML) obj;
+    SampleAppSAMLWebview other = (SampleAppSAMLWebview) obj;
     if (defaultIDP == null) {
       if (other.defaultIDP != null) {
         return false;

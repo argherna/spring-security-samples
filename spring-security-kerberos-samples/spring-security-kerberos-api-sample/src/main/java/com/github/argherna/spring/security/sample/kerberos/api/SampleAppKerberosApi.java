@@ -4,8 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties("sampleapp.api")
-public class SampleAppApi {
+@ConfigurationProperties("sampleapp-kerberos-api")
+public class SampleAppKerberosApi {
 
   private String servicePrincipal;
 

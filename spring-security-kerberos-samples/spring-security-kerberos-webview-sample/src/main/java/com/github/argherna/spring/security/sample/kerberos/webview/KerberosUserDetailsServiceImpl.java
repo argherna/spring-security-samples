@@ -1,4 +1,4 @@
-package com.github.argherna.spring.security.sample.kerberos.api;
+package com.github.argherna.spring.security.sample.kerberos.webview;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,9 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public class KerberosUserDetailsService implements UserDetailsService {
+public class KerberosUserDetailsServiceImpl implements UserDetailsService {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(KerberosUserDetailsService.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(KerberosUserDetailsServiceImpl.class);
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

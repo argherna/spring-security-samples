@@ -38,6 +38,6 @@ public class WebviewSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   private UserDetailsService kerberosUserDetailsService() {
-    return new KerberosUserDetailsService();
+    return new KerberosUserDetailsServiceImpl();
   }
 }

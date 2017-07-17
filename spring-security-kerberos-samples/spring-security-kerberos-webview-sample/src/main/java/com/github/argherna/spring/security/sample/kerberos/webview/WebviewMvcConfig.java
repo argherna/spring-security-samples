@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-public class MvcConfig extends WebMvcConfigurerAdapter {
+public class WebviewMvcConfig extends WebMvcConfigurerAdapter {
 
   @Autowired
   private CurrentUserHandlerMethodArgumentResolver currentUserHandlerMethodArgumentResolver;
@@ -23,8 +23,8 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
   public void addViewControllers(ViewControllerRegistry registry) {
     registry.addViewController("/").setViewName("index");
     registry.addViewController("/error").setViewName("error");
-    registry.addViewController("/open").setViewName("open");
-    registry.addViewController("/secure").setViewName("secure");
+    registry.addViewController("/openinfo").setViewName("open");
+    registry.addViewController("/secureinfo").setViewName("secure");
     registry.addViewController("/login").setViewName("login");
   }
 }
