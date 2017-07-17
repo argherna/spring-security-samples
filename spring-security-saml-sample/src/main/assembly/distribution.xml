@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+
+  <id>distribution</id>
+
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>${file.separator}saml-webview-sample</outputDirectory>
+      <fileMode>0644</fileMode>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <excludes>
+        <exclude>org.*:*</exclude>
+      </excludes>
+    </dependencySet>
+  </dependencySets>
+
+  <fileSets>
+    <fileSet>
+      <directory>src/main/assembly</directory>
+      <outputDirectory>${file.separator}saml-webview-sample${file.separator}config</outputDirectory>
+      <excludes>
+        <exclude>*</exclude>
+      </excludes>
+      <fileMode>600</fileMode>
+      <directoryMode>700</directoryMode>
+    </fileSet>
+    <fileSet>
+      <directory>src/main/assembly</directory>
+      <outputDirectory>${file.separator}saml-webview-sample${file.separator}logs</outputDirectory>
+      <excludes>
+        <exclude>*</exclude>
+      </excludes>
+      <fileMode>600</fileMode>
+      <directoryMode>700</directoryMode>
+    </fileSet>
+    <fileSet>
+      <directory>src/main/scripts</directory>
+      <outputDirectory>${file.separator}saml-webview-sample</outputDirectory>
+      <includes>
+        <include>*</include>
+      </includes>
+      <fileMode>700</fileMode>
+      <directoryMode>700</directoryMode>
+    </fileSet>
+  </fileSets>
+</assembly>
