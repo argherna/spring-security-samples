@@ -36,7 +36,7 @@ public class WebviewMvcConfig extends WebMvcConfigurerAdapter {
 
   @Autowired
   private CurrentUserHandlerMethodArgumentResolver currentUserHandlerMethodArgumentResolver;
-  
+
   @Override
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
     argumentResolvers.add(currentUserHandlerMethodArgumentResolver);

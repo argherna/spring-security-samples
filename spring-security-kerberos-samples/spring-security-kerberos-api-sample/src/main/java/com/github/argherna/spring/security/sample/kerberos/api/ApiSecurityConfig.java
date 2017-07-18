@@ -68,7 +68,8 @@ public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
   public SunJaasKerberosTicketValidator sunJaasKerberosTicketValidator() {
     SunJaasKerberosTicketValidator ticketValidator = new SunJaasKerberosTicketValidator();
     ticketValidator.setServicePrincipal(sampleAppKerberosApi.getServicePrincipal());
-    ticketValidator.setKeyTabLocation(new FileSystemResource(sampleAppKerberosApi.getKeytabLocation()));
+    ticketValidator
+        .setKeyTabLocation(new FileSystemResource(sampleAppKerberosApi.getKeytabLocation()));
     ticketValidator.setDebug(true);
     return ticketValidator;
   }

@@ -30,16 +30,19 @@ public class SpringSecurityKerberosClientSampleApplication
   private final SampleAppKerberosClient sampleAppKerberosClient;
 
   @Autowired
-  public SpringSecurityKerberosClientSampleApplication(SampleAppKerberosClient sampleAppKerberosClient) {
+  public SpringSecurityKerberosClientSampleApplication(
+      SampleAppKerberosClient sampleAppKerberosClient) {
     this.sampleAppKerberosClient = sampleAppKerberosClient;
   }
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
-    KerberosRestTemplate restTemplate = new KerberosRestTemplate(sampleAppKerberosClient.getKeytabLocation(),
-        sampleAppKerberosClient.getUserPrincipal(), Collections.singletonMap("debug", "true"));
+    KerberosRestTemplate restTemplate =
+        new KerberosRestTemplate(sampleAppKerberosClient.getKeytabLocation(),
+            sampleAppKerberosClient.getUserPrincipal(), Collections.singletonMap("debug", "true"));
     restTemplate.setErrorHandler(this);
-    ResourceContent resourceContent = restTemplate.getForObject(sampleAppKerberosClient.getUrl(), ResourceContent.class);
+    ResourceContent resourceContent =
+        restTemplate.getForObject(sampleAppKerberosClient.getUrl(), ResourceContent.class);
     if (resourceContent != null) {
       logger.info("resourceContent = {}", resourceContent);
     }

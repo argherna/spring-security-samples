@@ -1,17 +1,15 @@
 /*
  * Copyright 2016 Vincenzo De Notaris
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package com.github.argherna.spring.security.sample.saml.webview;
@@ -41,41 +39,41 @@ import com.github.argherna.spring.security.sample.saml.webview.SAMLUserDetailsSe
 
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes= TestConfig.class)
+@ContextConfiguration(classes = TestConfig.class)
 public class SAMLUserDetailsServiceImplTest extends CommonTestSupport {
 
-    @Autowired
-    private SAMLUserDetailsServiceImpl userDetailsService;
+  @Autowired
+  private SAMLUserDetailsServiceImpl userDetailsService;
 
-    @Test
-    public void testLoadUserBySAML() {
-        // given
-        NameID mockNameID = mock(NameID.class);
-        when(mockNameID.getValue()).thenReturn(USER_NAME);
+  @Test
+  public void testLoadUserBySAML() {
+    // given
+    NameID mockNameID = mock(NameID.class);
+    when(mockNameID.getValue()).thenReturn(USER_NAME);
 
-        SAMLCredential credentialsMock = mock(SAMLCredential.class);
-        when(credentialsMock.getNameID()).thenReturn(mockNameID);
+    SAMLCredential credentialsMock = mock(SAMLCredential.class);
+    when(credentialsMock.getNameID()).thenReturn(mockNameID);
 
-        // when
-        Object actual = userDetailsService.loadUserBySAML(credentialsMock);
+    // when
+    Object actual = userDetailsService.loadUserBySAML(credentialsMock);
 
-        // / then
-        assertNotNull(actual);
-        assertTrue(actual instanceof User);
+    // / then
+    assertNotNull(actual);
+    assertTrue(actual instanceof User);
 
-        User user = (User)actual;
-        assertEquals(USER_NAME, user.getUsername());
-        assertEquals(USER_PASSWORD, user.getPassword());
-        assertTrue(user.isEnabled());
-        assertTrue(user.isAccountNonExpired());
-        assertTrue(user.isCredentialsNonExpired());
-        assertTrue(user.isAccountNonLocked());
-        assertEquals(1, user.getAuthorities().size());
+    User user = (User) actual;
+    assertEquals(USER_NAME, user.getUsername());
+    assertEquals(USER_PASSWORD, user.getPassword());
+    assertTrue(user.isEnabled());
+    assertTrue(user.isAccountNonExpired());
+    assertTrue(user.isCredentialsNonExpired());
+    assertTrue(user.isAccountNonLocked());
+    assertEquals(1, user.getAuthorities().size());
 
-        List<GrantedAuthority> authorities = new ArrayList<>(user.getAuthorities());
-        Object authority = authorities.get(0);
+    List<GrantedAuthority> authorities = new ArrayList<>(user.getAuthorities());
+    Object authority = authorities.get(0);
 
-        assertTrue(authority instanceof SimpleGrantedAuthority);
-        assertEquals(USER_ROLE, ((SimpleGrantedAuthority)authority).getAuthority());
-    }
+    assertTrue(authority instanceof SimpleGrantedAuthority);
+    assertEquals(USER_ROLE, ((SimpleGrantedAuthority) authority).getAuthority());
+  }
 }

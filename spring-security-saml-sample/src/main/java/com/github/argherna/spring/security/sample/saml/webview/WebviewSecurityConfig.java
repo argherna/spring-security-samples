@@ -236,7 +236,8 @@ public class WebviewSecurityConfig extends WebSecurityConfigurerAdapter {
     Resource storeFile = loader.getResource(sampleAppSAMLWebview.getKeyStoreFile());
     String storePass = sampleAppSAMLWebview.getKeyStorePassword();
     Map<String, String> passwords = new HashMap<>();
-    passwords.put(sampleAppSAMLWebview.getKeyStoreDefaultKey(), sampleAppSAMLWebview.getKeyPassword());
+    passwords.put(sampleAppSAMLWebview.getKeyStoreDefaultKey(),
+        sampleAppSAMLWebview.getKeyPassword());
     String defaultKey = sampleAppSAMLWebview.getKeyStoreDefaultKey();
     return new JKSKeyManager(storeFile, storePass, passwords, defaultKey);
   }
@@ -288,13 +289,15 @@ public class WebviewSecurityConfig extends WebSecurityConfigurerAdapter {
   public ExtendedMetadata extendedMetadata() {
     ExtendedMetadata extendedMetadata = new ExtendedMetadata();
     extendedMetadata.setSignMetadata(false);
-    if (sampleAppSAMLWebview.getIdpDiscoveryUrl() != null && !sampleAppSAMLWebview.getIdpDiscoveryUrl().isEmpty()) {
+    if (sampleAppSAMLWebview.getIdpDiscoveryUrl() != null
+        && !sampleAppSAMLWebview.getIdpDiscoveryUrl().isEmpty()) {
       extendedMetadata.setIdpDiscoveryEnabled(true);
       extendedMetadata.setIdpDiscoveryURL(sampleAppSAMLWebview.getIdpDiscoveryUrl());
     }
     if (sampleAppSAMLWebview.getIdpDiscoveryResponseUrl() != null
         && !sampleAppSAMLWebview.getIdpDiscoveryResponseUrl().isEmpty()) {
-      extendedMetadata.setIdpDiscoveryResponseURL(sampleAppSAMLWebview.getIdpDiscoveryResponseUrl());
+      extendedMetadata
+          .setIdpDiscoveryResponseURL(sampleAppSAMLWebview.getIdpDiscoveryResponseUrl());
     }
     return extendedMetadata;
   }
@@ -333,7 +336,8 @@ public class WebviewSecurityConfig extends WebSecurityConfigurerAdapter {
     List<MetadataProvider> providers = new ArrayList<>();
     providers.add(extendedMetadataProvider());
     MetadataManager metadataManager = new CachingMetadataManager(providers);
-    if (sampleAppSAMLWebview.getDefaultIDP() != null && !sampleAppSAMLWebview.getDefaultIDP().isEmpty()) {
+    if (sampleAppSAMLWebview.getDefaultIDP() != null
+        && !sampleAppSAMLWebview.getDefaultIDP().isEmpty()) {
       metadataManager.setDefaultIDP(sampleAppSAMLWebview.getDefaultIDP());
     }
     return metadataManager;

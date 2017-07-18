@@ -10,7 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class KerberosUserDetailsServiceImpl implements UserDetailsService {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(KerberosUserDetailsServiceImpl.class);
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(KerberosUserDetailsServiceImpl.class);
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

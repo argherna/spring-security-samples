@@ -1,17 +1,15 @@
 /*
  * Copyright 2016 Vincenzo De Notaris
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package com.github.argherna.spring.security.sample.saml.webview;
@@ -46,51 +44,43 @@ import com.github.argherna.spring.security.sample.saml.webview.LandingController
 
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(loader = SpringBootContextLoader.class,
-        classes = {TestConfig.class})
+@ContextConfiguration(loader = SpringBootContextLoader.class, classes = {TestConfig.class})
 @WebAppConfiguration
 public class LandingControllerTest extends CommonTestSupport {
 
-    @InjectMocks
-    private LandingController landingController;
+  @InjectMocks
+  private LandingController landingController;
 
-    @Mock
-    private View mockView;
+  @Mock
+  private View mockView;
 
-    private MockMvc mockMvc;
+  private MockMvc mockMvc;
 
-    @Before
-    public void setUp()
-    {
-        MockitoAnnotations.initMocks(this);
-        mockMvc = standaloneSetup(landingController)
-                .setCustomArgumentResolvers(new MockArgumentResolver())
-                .setSingleView(mockView).build();
+  @Before
+  public void setUp() {
+    MockitoAnnotations.initMocks(this);
+    mockMvc = standaloneSetup(landingController)
+        .setCustomArgumentResolvers(new MockArgumentResolver()).setSingleView(mockView).build();
+  }
+
+  @Test
+  public void testAnonymousLanding() throws Exception {
+    mockMvc.perform(get("/landing").session(mockHttpSession(true))).andExpect(status().isOk())
+        .andExpect(model().attribute("username", USER_NAME)).andExpect(view().name("landing"));
+  }
+
+  private static class MockArgumentResolver implements HandlerMethodArgumentResolver {
+    @Override
+    public boolean supportsParameter(MethodParameter methodParameter) {
+      return methodParameter.getParameterType().equals(User.class);
     }
 
-    @Test
-    public void testAnonymousLanding() throws Exception {
-        mockMvc.perform(get("/landing").session(mockHttpSession(true)))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("username", USER_NAME))
-                .andExpect(view().name("landing"));
+    @Override
+    public Object resolveArgument(MethodParameter methodParameter,
+        ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest,
+        WebDataBinderFactory webDataBinderFactory) throws Exception {
+      return CommonTestSupport.USER_DETAILS;
     }
-
-    private static class MockArgumentResolver implements HandlerMethodArgumentResolver
-    {
-        @Override
-        public boolean supportsParameter(MethodParameter methodParameter) {
-            return methodParameter.getParameterType().equals(User.class);
-        }
-
-        @Override
-        public Object resolveArgument(MethodParameter methodParameter,
-                                      ModelAndViewContainer modelAndViewContainer,
-                                      NativeWebRequest nativeWebRequest,
-                                      WebDataBinderFactory webDataBinderFactory)
-                                    		  throws Exception {
-            return CommonTestSupport.USER_DETAILS;
-        }
-    }
+  }
 
 }
