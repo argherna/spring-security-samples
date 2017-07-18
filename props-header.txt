@@ -10,3 +10,21 @@
 # properties. Visit "Appendix A. Common application properties" at 
 # https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html.
 #
+# Editing guide:
+#
+#  - Use ' = ' as the property name-value separator.
+#
+#  - Line up property name-value separators so that they are all in the 
+#    same column.
+#
+#  - Continue lines whose values extend further than 80 characters on
+#    the following line under the beginning of the value column.
+#
+#  - Application specific properties follow the convention where
+#    CamelCased words in Java code (such as configuration classes) are
+#    separated by '-' and are all in lower-case meaning 'CamelCase'
+#    becomes 'camel-case'.
+#
+#  - Unset properties should have an empty value. That is, if you want to make
+#    sure 'foo.prop' does not have a value, set 'foo.prop = '.
+#
