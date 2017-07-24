@@ -14,11 +14,17 @@
 
 package com.github.argherna.spring.security.sample.saml.webview;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -28,28 +34,29 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootContextLoader;
-import org.springframework.core.MethodParameter;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.saml.metadata.MetadataManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.support.WebDataBinderFactory;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.View;
 
-import com.github.argherna.spring.security.sample.saml.webview.LandingController;
+import com.github.argherna.spring.security.sample.saml.webview.IdpSelectionController;
 
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = SpringBootContextLoader.class, classes = {TestConfig.class})
 @WebAppConfiguration
-public class LandingControllerTest extends CommonTestSupport {
+public class IdpSelectionControllerTest extends CommonTestSupport {
+
+  private static final Set<String> IDPS =
+      Collections.unmodifiableSet(new HashSet<>(Arrays.asList("idp1", "idp2", "idp3")));
 
   @InjectMocks
-  private LandingController landingController;
+  IdpSelectionController ssoController;
+
+  @Mock
+  private MetadataManager metadata;
 
   @Mock
   private View mockView;
@@ -59,28 +66,32 @@ public class LandingControllerTest extends CommonTestSupport {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    mockMvc = standaloneSetup(landingController)
-        .setCustomArgumentResolvers(new MockArgumentResolver()).setSingleView(mockView).build();
+    mockMvc = standaloneSetup(ssoController).setSingleView(mockView).build();
   }
 
   @Test
-  public void testAnonymousLanding() throws Exception {
-    mockMvc.perform(get("/landing").session(mockHttpSession(true))).andExpect(status().isOk())
-        .andExpect(model().attribute("username", USER_NAME)).andExpect(view().name("landing"));
+  public void testIdpSelection() throws Exception {
+    mockMvc.perform(get("/saml/idpSelection").session(mockHttpSession(false)))
+        .andExpect(status().isOk()).andExpect(view().name("redirect:/landing"));
   }
 
-  private static class MockArgumentResolver implements HandlerMethodArgumentResolver {
-    @Override
-    public boolean supportsParameter(MethodParameter methodParameter) {
-      return methodParameter.getParameterType().equals(User.class);
-    }
+  @Test
+  public void testIdpSelectionWithoutForwarding() throws Exception {
+    mockMvc.perform(get("/saml/idpSelection").session(mockAnonymousHttpSession()))
+        .andExpect(status().isOk()).andExpect(view().name("redirect:/"));
+  }
 
-    @Override
-    public Object resolveArgument(MethodParameter methodParameter,
-        ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest,
-        WebDataBinderFactory webDataBinderFactory) throws Exception {
-      return CommonTestSupport.USER_DETAILS;
-    }
+  @Test
+  public void testIdpSelectionWithForwarding() throws Exception {
+    // given
+    when(metadata.getIDPEntityNames()).thenReturn(IDPS);
+
+    // when / then
+    mockMvc
+        .perform(get("/saml/idpSelection").session(mockAnonymousHttpSession())
+            .requestAttr("javax.servlet.forward.request_uri", "http://forward.to"))
+        .andExpect(status().isOk()).andExpect(model().attribute("idps", IDPS))
+        .andExpect(view().name("saml/idpselection"));
   }
 
 }

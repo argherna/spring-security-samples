@@ -366,7 +366,7 @@ public class WebviewSecurityConfig extends WebSecurityConfigurerAdapter {
   public SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler() {
     SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler =
         new SavedRequestAwareAuthenticationSuccessHandler();
-    successRedirectHandler.setDefaultTargetUrl("/landing");
+    successRedirectHandler.setDefaultTargetUrl("/secure");
     return successRedirectHandler;
   }
 
@@ -538,8 +538,8 @@ public class WebviewSecurityConfig extends WebSecurityConfigurerAdapter {
     http.csrf().disable();
     http.addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
         .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class);
-    http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/error").permitAll()
-        .antMatchers("/saml/**").permitAll().anyRequest().authenticated();
+    http.authorizeRequests().antMatchers("/", "/open", "/error", "/saml/**").permitAll()
+        .anyRequest().authenticated();
     http.logout().logoutSuccessUrl("/");
   }
 

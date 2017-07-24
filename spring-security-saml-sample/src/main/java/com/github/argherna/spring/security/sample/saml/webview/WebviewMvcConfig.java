@@ -46,5 +46,15 @@ public class WebviewMvcConfig extends WebMvcConfigurerAdapter {
   public void addViewControllers(ViewControllerRegistry registry) {
     registry.addViewController("/").setViewName("index");
     registry.addViewController("/error").setViewName("error");
+    registry.addViewController("/open").setViewName("open");
   }
+
+  /*
+  @Bean
+  public SpringTemplateEngine templateEngine() {
+    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+    templateEngine.addDialect(new SpringSecurityDialect());
+    return templateEngine;
+  }
+  */
 }

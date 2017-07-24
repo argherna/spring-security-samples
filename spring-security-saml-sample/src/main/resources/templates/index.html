@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-    <head>
-        <title>Hello World!</title>
-    </head>
-    <body>
-        <h1>Hello SAML2!</h1>
-        <p>
-        	<a th:href="@{/saml/login}">SSO Login Page</a>
-        </p>
-    </body>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>SAML Sample Home</title>
+</head>
+<body>
+	<h1>Welcome to SAML2 Sample!</h1>
+	<p>
+		<a th:href="@{/saml/login}">Login</a>
+	</p>
+</body>
 </html>

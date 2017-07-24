@@ -35,35 +35,32 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.saml.metadata.MetadataManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/saml")
-public class SSOController {
+@RequestMapping("/saml/idpSelection")
+public class IdpSelectionController {
 
-  // Logger
-  private static final Logger LOG = LoggerFactory.getLogger(SSOController.class);
+  private static final Logger logger = LoggerFactory.getLogger(IdpSelectionController.class);
 
   @Autowired
   private MetadataManager metadata;
 
-  @RequestMapping(value = "/idpSelection", method = RequestMethod.GET)
-  public String idpSelection(HttpServletRequest request, Model model) {
+  @GetMapping
+  public String getView(HttpServletRequest request, Model model) {
     if (!(SecurityContextHolder.getContext()
         .getAuthentication() instanceof AnonymousAuthenticationToken)) {
-      LOG.warn("The current user is already logged.");
-      return "redirect:/landing";
+      logger.warn("The current user is already logged in.");
+      return "redirect:/secure";
     } else {
       if (isForwarded(request)) {
         Set<String> idps = metadata.getIDPEntityNames();
-        for (String idp : idps) {
-          LOG.info("Configured Identity Provider for SSO: " + idp);
-        }
+        logger.info("Configured Identity Provider for SSO: {}", idps);
         model.addAttribute("idps", idps);
         return "saml/idpselection";
       } else {
-        LOG.warn("Direct accesses to '/idpSelection' route are not allowed");
+        logger.warn("Direct accesses to '/idpSelection' route are not allowed");
         return "redirect:/";
       }
     }
@@ -73,11 +70,7 @@ public class SSOController {
    * Checks if an HTTP request is forwarded from servlet.
    */
   private boolean isForwarded(HttpServletRequest request) {
-    if (request.getAttribute("javax.servlet.forward.request_uri") == null) {
-      return false;
-    } else {
-      return true;
-    }
+    return (request.getAttribute("javax.servlet.forward.request_uri") == null);
   }
 
 }

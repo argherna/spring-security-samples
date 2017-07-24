@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<title>SAML Sample Secure</title>
+</head>
+<body>
+	<h1>SAML Sample Secure</h1>
+	<h2>Welcome!</h2>
+	<p>
+		You are logged in as <span th:text="${#authentication.name}">null</span>!
+	</p>
+
+	<div sec:authorize="hasRole('ROLE_MANAGER')">
+		<p>You have been authenticated as a manager.</p>
+	</div>
+
+	<div sec:authorize="hasRole('ROLE_ACTUATOR')">
+		<p>You have been authenticated as a user that can use the
+			actuator.</p>
+	</div>
+
+	<div sec:authorize="hasRole('ROLE_USER')">
+		<p>You have been authenticated as a user.</p>
+	</div>
+
+	<div th:unless="${#maps.isEmpty(attributes)}">
+		<h2>SAML User Attributes</h2>
+		<table>
+			<tr>
+				<th>Name</th>
+				<th>Value</th>
+			</tr>
+			<tr th:each="attribute : ${attributes}">
+				<td th:text="${attribute.key}">key</td>
+				<td th:text="${attribute.value}">value</td>
+			</tr>
+		</table>
+	</div>
+
+	<ul>
+		<li><a th:href="@{/saml/logout}">Global Logout</a></li>
+		<li><a th:href="@{/saml/logout?local=true}">Local Logout</a></li>
+	</ul>
+</body>
+</html>

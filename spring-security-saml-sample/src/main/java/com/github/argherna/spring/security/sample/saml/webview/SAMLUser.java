@@ -10,8 +10,12 @@
 
 package com.github.argherna.spring.security.sample.saml.webview;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -23,7 +27,7 @@ public class SAMLUser extends User {
   /**
    *
    */
-  private static final long serialVersionUID = 6923530005782330839L;
+  private static final long serialVersionUID = -3329705474105530845L;
 
   private final MultiValueMap<String, String> userAttributes;
 
@@ -58,5 +62,32 @@ public class SAMLUser extends User {
     MultiValueMap<String, String> userAttributesCopy = new LinkedMultiValueMap<>();
     userAttributesCopy.putAll(userAttributes);
     return userAttributesCopy;
+  }
+
+  public Map<String, String> getAllAttributesFlat() {
+    Map<String, String> flatAttributes = new HashMap<>();
+    for (String userAttribute : userAttributes.keySet()) {
+      List<String> userAttributeValue = userAttributes.get(userAttribute);
+      if (userAttributeValue != null & !userAttributeValue.isEmpty()) {
+        String value = userAttributeValue.size() > 1
+            ? userAttributeValue.stream().collect(Collectors.joining(", "))
+            : userAttributeValue.get(0);
+        flatAttributes.put(userAttribute, value);
+      }
+    }
+    return flatAttributes;
+  }
+
+  public List<String> getAuthorityNames() {
+    Collection<GrantedAuthority> authorities = getAuthorities();
+    List<String> authoritynames;
+    if (authorities != null && authorities.size() > 0) {
+      authoritynames = authorities.stream().map(authority -> {
+        return authority.getAuthority();
+      }).collect(Collectors.toList());
+    } else {
+      authoritynames = new ArrayList<>();
+    }
+    return authoritynames;
   }
 }
