@@ -67,7 +67,7 @@ PID_FILE=$DIR/${SCRIPT_NAME%.*}.pid
 
 # Set the name of the jar file
 #
-JAR_FILE=$DIR/spring-security-kerberos-webview-sample-1.0.0-SNAPSHOT.jar
+JAR_FILE=$DIR/spring-security-kerberos-webview-sample-1.0.0.jar
 
 case $COMMAND in
 

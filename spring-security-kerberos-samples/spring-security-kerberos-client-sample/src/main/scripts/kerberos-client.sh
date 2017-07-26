@@ -26,6 +26,6 @@ DIR="$(dirname "$DIR")"
 
 # Set the name of the jar file
 #
-JAR_FILE=$DIR/spring-security-kerberos-client-sample-1.0.0-SNAPSHOT.jar
+JAR_FILE=$DIR/spring-security-kerberos-client-sample-1.0.0.jar
 
 /usr/bin/java -jar $JAR_FILE
