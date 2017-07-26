@@ -5,7 +5,7 @@
 
   <groupId>com.github.argherna.spring.security.kerberos.sample.client</groupId>
   <artifactId>spring-security-kerberos-client-sample</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <name>spring-security-kerberos-client-sample</name>
